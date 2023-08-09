@@ -20,6 +20,10 @@ public class DaoPostgresRestaurante implements DaoRestaurante {
 	private String SELECT_BY_ID = "SELECT r.id id_restaurante, r.nome nome_restaurante, r.descricao, r.cidade, r.logradouro, r.bairro, r.complemento, c.id id_categoria, c.nome nome_categoria FROM restaurantes r, categorias c WHERE r.id_categoria = c.id and r.id =? ";
 	private String SELECT_BY_NOME_CATEG = "SELECT r.id id_restaurante, r.nome nome_restaurante, r.descricao, r.cidade, r.logradouro, r.bairro, r.complemento, c.id id_categoria, c.nome nome_categoria FROM restaurantes r, categorias c WHERE r.id_categoria = c.id ";
 	
+	private final String COUNT_BY_CATEG = "SELECT Count(*) qtde "
+			+ "FROM restaurantes r"
+			+ "WHERE r.id_categoria = ?";
+	
 	private Connection conexao;
 	
 	public DaoPostgresRestaurante() {
@@ -224,5 +228,38 @@ public class DaoPostgresRestaurante implements DaoRestaurante {
 			throw new RuntimeException("Ocorreu um erro ao extrair o restaurante. Motivo: " + e.getMessage());
 		}
 	}
+	
+	@Override
+	public int contarPor(int idDaCategoria) {
+		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			ps = conexao.prepareStatement(COUNT_BY_CATEG);
+			ps.setInt(1, idDaCategoria);
+			rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				return rs.getInt("qtde");
+				
+			} else {
+				return 0;
+			}
+			
+			
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro ao contar os restaurante. Motivo: " + e.getMessage());
+			
+		} finally {
+			ManagerDb.getInstance().fechar(ps);
+			ManagerDb.getInstance().fechar(rs);
+			
+		}
+		
+		
+	}
+		
+	}
 
-}
+

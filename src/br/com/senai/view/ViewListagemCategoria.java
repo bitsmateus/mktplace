@@ -70,6 +70,7 @@ public class ViewListagemCategoria extends JFrame {
 					} else {
 						CategoriaTableModel model = new CategoriaTableModel(categoriaEncontrado);
 						tableCategorias.setModel(model);
+						configurarTabela();
 					}
 					
 				} catch (Exception e2) {
@@ -132,6 +133,9 @@ public class ViewListagemCategoria extends JFrame {
 				}
 				
 			}
+			
+			
+			
 		});
 		btnExcluir.setBounds(469, 328, 98, 26);
 		contentPane.add(btnExcluir);
@@ -161,5 +165,17 @@ public class ViewListagemCategoria extends JFrame {
 		
 		
 		setLocationRelativeTo(null);
+	}
+	
+	private void configurarColuna(int indice, int largura) {
+		this.tableCategorias.getColumnModel().getColumn(indice).setResizable(true);
+		this.tableCategorias.getColumnModel().getColumn(indice).setPreferredWidth(largura);
+	}
+	
+	private void configurarTabela() {
+		final int COLUNA_ID = 0;
+		final int COLUNA_NOME = 1;
+		this.tableCategorias.getTableHeader().setReorderingAllowed(false);
+		this.tableCategorias.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 }
